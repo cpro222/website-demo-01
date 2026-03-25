@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amber Helix Learning Portal</title>
+    <style>
+        /* CSS Variables for Theme Colors */
+        :root {
+            --bg-dark: #1e1915;
+            --bg-card: #2a231d;
+            --bg-card-hover: #332b24;
+            --accent-primary: #f6a11e;
+            --accent-hover: #d68915;
+            --text-main: #ffffff;
+            --text-muted: #a69e98;
+            --border-color: #3f362f;
+            --sidebar-width: 260px;
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* Basic Reset & Typography */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        button {
+            cursor: pointer;
+            font-family: inherit;
+            border: none;
+            outline: none;
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--bg-dark);
+            border-right: 1px solid var(--border-color);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .brand h1 {
+            color: var(--accent-primary);
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+
+        .brand p {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-bottom: 40px;
+        }
+
+        .nav-links li {
+            margin-bottom: 12px;
+        }
+
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a.active {
+            background-color: rgba(246, 161, 30, 0.1);
+            color: var(--accent-primary);
+            font-weight: 600;
+        }
+
+        .nav-links a:hover:not(.active) {
+            background-color: var(--bg-card);
+            color: var(--text-main);
+        }
+
+        .nav-icon {
+            margin-right: 12px;
+            font-size: 1.1rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-card);
+            padding: 12px;
+            border-radius: 12px;
+            margin-top: auto;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            background-color: #ddd;
+            border-radius: 50%;
+            margin-right: 12px;
+        }
+
+        .user-info h4 {
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+        }
+
+        .user-info p {
+            color: var(--accent-primary);
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* --- Main Content Area --- */
+        .main-content {
+            flex: 1;
+            padding: 32px 48px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* Top Header */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-card);
+            padding: 10px 20px;
+            border-radius: 20px;
+            width: 400px;
+        }
+
+        .search-bar input {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            width: 100%;
+            margin-left: 10px;
+            font-size: 0.9rem;
+        }
+
+        .search-bar input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .dark-mode-toggle {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .toggle-switch {
+            width: 44px;
+            height: 24px;
+            background-color: var(--accent-primary);
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .toggle-circle {
+            width: 18px;
+            height: 18px;
+            background-color: var(--bg-dark);
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            right: 3px;
+        }
+
+        /* Typography Headers */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .section-title h2 {
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+        }
+
+        .section-title p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .view-history {
+            color: var(--accent-primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* Continue Learning Card */
+        .continue-card {
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            gap: 24px;
+            margin-bottom: 48px;
+            align-items: center;
+        }
+
+        .continue-img {
+            width: 240px;
+            height: 140px;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            /* Placeholder for abstract sphere */
+            border-radius: 12px;
+        }
+
+        .continue-info {
+            flex: 1;
+        }
+
+        .tag-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .tag {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .tag.orange {
+            color: var(--accent-primary);
+            background-color: rgba(246, 161, 30, 0.1);
+        }
+
+        .tag.dark {
+            color: var(--text-muted);
+            background-color: #1a1614;
+        }
+
+        .time-remain {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .continue-info h3 {
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+        }
+
+        .continue-info p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            line-height: 1.4;
+            margin-bottom: 24px;
+            max-width: 80%;
+        }
+
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .progress-bar-bg {
+            flex: 1;
+            height: 6px;
+            background-color: var(--border-color);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--accent-primary);
+            width: 65%;
+            border-radius: 3px;
+        }
+
+        .progress-text {
+            color: var(--accent-primary);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-primary);
+            color: #000;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* Filter Pills */
+        .filters {
+            display: flex;
+            gap: 12px;
+        }
+
+        .filter-pill {
+            padding: 6px 16px;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            background-color: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+        }
+
+        .filter-pill.active {
+            background-color: var(--text-main);
+            color: #000;
+            border-color: var(--text-main);
+        }
+
+        /* Course Grid */
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            padding-bottom: 40px;
+        }
+
+        .course-card {
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s;
+        }
+
+        .course-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .card-img {
+            height: 140px;
+            position: relative;
+            /* Placeholder gradients to match theme */
+            background: linear-gradient(135deg, #432b21, #1e1511);
+        }
+
+        .card-img.c1 {
+            background: linear-gradient(135deg, #a1482b, #4a2119);
+        }
+
+        .card-img.c2 {
+            background: linear-gradient(135deg, #1f3b4d, #11222c);
+        }
+
+        .card-img.c3 {
+            background: linear-gradient(135deg, #2b4d3f, #152720);
+        }
+
+        .card-img.c4 {
+            background: linear-gradient(135deg, #d39d5d, #684a29);
+        }
+
+        .card-img.c5 {
+            background: linear-gradient(135deg, #516e58, #2a3a2e);
+        }
+
+        .card-img.c6 {
+            background: linear-gradient(135deg, #1b263b, #0d131f);
+        }
+
+        .card-img.c7 {
+            background: linear-gradient(135deg, #8a5a19, #422a0a);
+        }
+
+        .card-tag {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: var(--text-main);
+            font-size: 0.6rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-weight: 600;
+            backdrop-filter: blur(4px);
+        }
+
+        .card-badge {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: var(--text-main);
+            font-size: 0.65rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            backdrop-filter: blur(4px);
+        }
+
+        .card-badge.gold {
+            background-color: var(--accent-primary);
+            color: #000;
+            font-weight: bold;
+            top: 12px;
+            bottom: auto;
+        }
+
+        .card-content {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-content h4 {
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .card-content p {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            line-height: 1.5;
+            flex: 1;
+            /* Pushes footer down */
+            margin-bottom: 16px;
+        }
+
+        /* Small progress bar inside some cards */
+        .card-progress {
+            height: 2px;
+            background-color: var(--border-color);
+            margin-bottom: 16px;
+            border-radius: 1px;
+        }
+
+        .card-progress-fill {
+            height: 100%;
+            background-color: var(--accent-primary);
+            border-radius: 1px;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+            padding-top: 16px;
+        }
+
+        .lesson-count {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-card {
+            background-color: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .btn-card.start {
+            color: var(--accent-primary);
+            border-color: rgba(246, 161, 30, 0.3);
+            background-color: rgba(246, 161, 30, 0.05);
+        }
+
+        /* Request Topic Card */
+        .request-card {
+            border: 2px dashed var(--border-color);
+            background-color: transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 32px;
+        }
+
+        .icon-circle {
+            width: 48px;
+            height: 48px;
+            background-color: var(--accent-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            color: #000;
+            font-size: 1.2rem;
+        }
+
+        .request-card h4 {
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .request-card p {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-bottom: 20px;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--accent-primary);
+            border: 1px solid var(--accent-primary);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: absolute;
+            bottom: 40px;
+            right: 48px;
+            width: 56px;
+            height: 56px;
+            background-color: var(--accent-primary);
+            color: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(246, 161, 30, 0.3);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .fab:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div>
+            <div class="brand">
+                <h1>Amber Helix</h1>
+                <p>Learning Portal</p>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#"><span class="nav-icon">🏠</span> Home</a></li>
+                <li><a href="#" class="active"><span class="nav-icon">📚</span> Courses</a></li>
+                <li><a href="#"><span class="nav-icon">🏆</span> Awards</a></li>
+                <li><a href="#"><span class="nav-icon">👤</span> Profile</a></li>
+            </ul>
+        </div>
+
+        <div class="user-profile">
+            <div class="avatar"></div>
+            <div class="user-info">
+                <h4>Alex Rivera</h4>
+                <p>Level 14 Pro</p>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="top-header">
+            <div class="search-bar">
+                <span style="color: var(--text-muted)">🔍</span>
+                <input type="text" placeholder="Search for topics, courses, or mentors...">
+            </div>
+            <div class="header-actions">
+                <span style="color: var(--text-muted); cursor: pointer;">🔔</span>
+                <div class="dark-mode-toggle">
+                    <span>Dark Mode</span>
+                    <div class="toggle-switch">
+                        <div class="toggle-circle"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section>
+            <div class="section-header">
+                <div class="section-title">
+                    <h2>Continue Learning</h2>
+                    <p>Pick up right where you left off</p>
+                </div>
+                <a href="#" class="view-history">View History</a>
+            </div>
+
+            <div class="continue-card">
+                <div class="continue-img"></div>
+                <div class="continue-info">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <div class="tag-group">
+                                <span class="tag orange">Astrophysics</span>
+                                <span class="time-remain">• 45 mins remaining</span>
+                            </div>
+                            <h3>Quantum Mechanics: The Hidden Realm</h3>
+                            <p>Dive deep into the subatomic world and understand the fundamental principles that govern
+                                the universe at its smallest scales.</p>
+                        </div>
+                        <button class="btn-primary">▶ Resume Lesson</button>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar-bg">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <span class="progress-text">65%</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="section-header">
+                <div class="section-title">
+                    <h2>Explore Courses</h2>
+                    <p>Expand your knowledge across multiple disciplines</p>
+                </div>
+                <div class="filters">
+                    <button class="filter-pill active">All</button>
+                    <button class="filter-pill">In Progress</button>
+                    <button class="filter-pill">New</button>
+                    <button class="filter-pill">Popular</button>
+                    <button class="filter-pill">Completed</button>
+                </div>
+            </div>
+
+            <div class="course-grid">
+
+                <article class="course-card">
+                    <div class="card-img c1">
+                        <span class="card-tag">Art</span>
+                        <span class="card-badge">⏱ 12h</span>
+                    </div>
+                    <div class="card-content">
+                        <h4>Digital Abstract Painting</h4>
+                        <p>Master the tools and techniques of modern digital artistry from scratch.</p>
+                        <div class="card-footer">
+                            <span class="lesson-count">📄 24 Lessons</span>
+                            <button class="btn-card start">Start</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="course-card">
+                    <div class="card-img c2">
+                        <span class="card-tag">Business</span>
+                        <span class="card-badge">★ 4.9</span>
+                    </div>
+                    <div class="card-content">
+                        <h4>Strategic Market Growth</h4>
+                        <p>Learn how to scale your startup using data-driven marketing strategies.</p>
+                        <div class="card-progress" style="margin-top: 10px;">
+                            <div class="card-progress-fill" style="width: 30%;"></div>
+                        </div>
+                        <div class="card-footer" style="border-top: none; padding-top: 0;">
+                            <span class="lesson-count">📄 18 Lessons</span>
+                            <button class="btn-card start">Resume</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="course-card">
+                    <div class="card-img c3">
+                        <span class="card-tag">Science</span>
+                        <span class="card-badge gold">NEW</span>
+                    </div>
+                    <div class="card-content">
+                        <h4>Hardware Systems Design</h4>
+                        <p>Exploring the foundations of modern computing through hardware architecture.</p>
+                        <div class="card-footer">
+                            <span class="lesson-count">📄 32 Lessons</span>
+                            <button class="btn-card start">Start</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="course-card">
+                    <div class="card-img c4">
+                        <span class="card-tag">Writing</span>
+                    </div>
+                    <div class="card-content">
+                        <h4>Professional Copywriting</h4>
+                        <p>Master the art of persuasion and clear communication for any platform.</p>
+                        <div class="card-footer">
+                            <span class="lesson-count"
+                                style="color: var(--accent-primary); font-weight: 600; font-size: 0.65rem;">COMPLETED</span>
+                            <button class="btn-card">Review</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="course-card">
+                    <div class="card-img c5">
+                        <span class="card-tag">Tech</span>
+                    </div>
+                    <div class="card-content">
+                        <h4>UI/UX Design Systems</h4>
+                        <p>Building scalable components and maintainable design libraries for enterprise apps.</p>
+                        <div class="card-footer">
+                            <span class="lesson-count">📄 40 Lessons</span>
+                            <button class="btn-card start">Start</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="course-card">
+                    <div class="card-img c6">
+                        <span class="card-tag">Science</span>
+                    </div>
+                    <div class="card-content">
+                        <h4>Chemical Bio-Engineering</h4>
+                        <p>The intersection of biology and chemistry to solve complex medical challenges.</p>
+                        <div class="card-progress" style="margin-top: 10px;">
+                            <div class="card-progress-fill" style="width: 80%;"></div>
+                        </div>
+                        <div class="card-footer" style="border-top: none; padding-top: 0;">
+                            <span class="lesson-count">📄 52 Lessons</span>
+                            <button class="btn-card start">Resume</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="course-card">
+                    <div class="card-img c7">
+                        <span class="card-tag">History</span>
+                    </div>
+                    <div class="card-content">
+                        <h4>The Industrial Revolution</h4>
+                        <p>How machinery changed the world and shaped the modern era we live in today.</p>
+                        <div class="card-footer">
+                            <span class="lesson-count">📄 15 Lessons</span>
+                            <button class="btn-card start">Start</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="course-card request-card">
+                    <div class="icon-circle">🚀</div>
+                    <h4>Request a Topic</h4>
+                    <p>Don't see what you're looking for? Let our instructors know!</p>
+                    <button class="btn-outline">Submit Suggestion</button>
+                </article>
+
+            </div>
+        </section>
+
+        <button class="fab">+</button>
+
+    </main>
+
+</body>
+
+</html>
